@@ -12,7 +12,6 @@ export default function Header() {
   const nav = [
     { name: "Home", href: "/" },
     { name: "Create Event", href: "/create-event" },
-    { name: "Event Details", href: "/event-details" },
     { name: "My Events", href: "/my-events" },
   ];
 
@@ -22,7 +21,7 @@ export default function Header() {
     <header className="sticky top-4 z-50 w-full">
       <div className="mx-auto max-w-7xl px-4">
         <div
-          className="relative flex items-center justify-between rounded-2xl border border-white/20 bg-white/70 p-2 shadow-lg backdrop-blur-xl transition  dark:bg-neutral-900/60"
+          className="relative flex items-center justify-between rounded-2xl border border-white/20 bg-white/10 p-2 shadow-lg backdrop-blur-xl transition  dark:bg-neutral-900/60"
         >
           
           <span className=" absolute inset-0 rounded-2xl [background:radial-gradient(60%_50%_at_50%_20%,rgba(99,102,241,0.15)_0%,rgba(99,102,241,0)_70%),radial-gradient(60%_50%_at_20%_80%,rgba(56,189,248,0.15)_0%,rgba(56,189,248,0)_70%),radial-gradient(60%_50%_at_80%_80%,rgba(16,185,129,0.15)_0%,rgba(16,185,129,0)_70%)]"></span>
@@ -38,16 +37,16 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="relative z-10 hidden items-center gap-1 md:flex">
+      
+          <nav className="relative z-10 hidden items-center gap-1 md:flex ">
             {nav.map((item) => (
-              <NavItem key={item.href} href={item.href} active={isActive(item.href)}>
-                {item.name}
+              <NavItem  key={item.href} href={item.href} active={isActive(item.href)}>
+                <span className="text-white">{item.name}</span>
               </NavItem>
             ))}
           </nav>
 
-          {/* Mobile menu button */}
+          
           <button
             onClick={() => setOpen((s) => !s)}
             className="relative z-10 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200/70 bg-white/80 shadow-sm backdrop-blur-md transition hover:scale-[1.02] active:scale-95 dark:border-neutral-800 dark:bg-neutral-900 md:hidden"

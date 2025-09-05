@@ -3,6 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, MapPin, Tag, FileText, Type } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -16,6 +27,7 @@ export default function CreateEventPage() {
   });
 
   const [errors, setErrors] = useState({});
+  const [openDialog, setOpenDialog] = useState(false); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,8 +56,13 @@ export default function CreateEventPage() {
     const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
     localStorage.setItem("events", JSON.stringify([...existingEvents, form]));
 
-    // Redirect to My Events page
-    router.push("/my-events");
+  
+    setOpenDialog(true);
+  };
+
+  const handleContinue = () => {
+    setOpenDialog(false);
+    router.push("/"); // redirect after confirmation
   };
 
   return (
@@ -95,7 +112,7 @@ export default function CreateEventPage() {
           {/* Date */}
           <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
-              <Calendar className="h-4 w-4 mr-2" /> Date
+              <Calendar className="h-4 w-4 mr-2 " /> Date
             </label>
             <input
               type="date"
@@ -132,20 +149,25 @@ export default function CreateEventPage() {
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
               <Tag className="h-4 w-4 mr-2" /> Category
             </label>
-            <input
-              type="text"
+            <select
               name="category"
               value={form.category}
               onChange={handleChange}
               className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter event category"
-            />
+            >
+              <option value="">Select category</option>
+              <option value="Conference">Conference</option>
+              <option value="Workshop">Workshop</option>
+              <option value="Meetup">Meetup</option>
+              <option value="Webinar">Webinar</option>
+              <option value="Hackathon">Hackathon</option>
+            </select>
             {errors.category && (
               <p className="text-red-500 text-xs mt-1">{errors.category}</p>
             )}
           </div>
 
-          {/* Submit */}
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition"
@@ -154,6 +176,26 @@ export default function CreateEventPage() {
           </button>
         </form>
       </div>
+
+      {/* ✅ AlertDialog after submission */}
+      <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Event Created Successfully 🎉</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your event has been saved. You can now view it in your events list.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpenDialog(false)}>
+              Stay Here
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleContinue}>
+              Go to My Events
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
