@@ -1,0 +1,159 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Calendar, MapPin, Tag, FileText, Type } from "lucide-react";
+
+export default function CreateEventPage() {
+  const router = useRouter();
+
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    date: "",
+    location: "",
+    category: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validate = () => {
+    let newErrors = {};
+    if (!form.title) newErrors.title = "Title is required";
+    if (!form.description) newErrors.description = "Description is required";
+    if (!form.date) newErrors.date = "Date is required";
+    if (!form.location) newErrors.location = "Location is required";
+    if (!form.category) newErrors.category = "Category is required";
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    // Save event to localStorage
+    const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
+    localStorage.setItem("events", JSON.stringify([...existingEvents, form]));
+
+    // Redirect to My Events page
+    router.push("/my-events");
+  };
+
+  return (
+    <div className="min-h-screen bg-neutral-950 flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-2xl bg-neutral-900 rounded-2xl shadow-xl p-8">
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">
+          Create New Event
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Title */}
+          <div>
+            <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
+              <Type className="h-4 w-4 mr-2" /> Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Enter event title"
+            />
+            {errors.title && (
+              <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+            )}
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
+              <FileText className="h-4 w-4 mr-2" /> Description
+            </label>
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              rows={3}
+              placeholder="Enter event description"
+            />
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1">{errors.description}</p>
+            )}
+          </div>
+
+          {/* Date */}
+          <div>
+            <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
+              <Calendar className="h-4 w-4 mr-2" /> Date
+            </label>
+            <input
+              type="date"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            {errors.date && (
+              <p className="text-red-500 text-xs mt-1">{errors.date}</p>
+            )}
+          </div>
+
+          {/* Location */}
+          <div>
+            <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
+              <MapPin className="h-4 w-4 mr-2" /> Location
+            </label>
+            <input
+              type="text"
+              name="location"
+              value={form.location}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Enter event location"
+            />
+            {errors.location && (
+              <p className="text-red-500 text-xs mt-1">{errors.location}</p>
+            )}
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
+              <Tag className="h-4 w-4 mr-2" /> Category
+            </label>
+            <input
+              type="text"
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Enter event category"
+            />
+            {errors.category && (
+              <p className="text-red-500 text-xs mt-1">{errors.category}</p>
+            )}
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition"
+          >
+            Create Event
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
