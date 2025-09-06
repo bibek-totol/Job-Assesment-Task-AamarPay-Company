@@ -13,6 +13,8 @@ export default function Header() {
     { name: "Home", href: "/" },
     { name: "Create Event", href: "/create-event" },
     { name: "My Events", href: "/my-events" },
+    { name: "Login", href: "/login" },
+    { name: "Register", href: "/register" },
   ];
 
   const isActive = (href) => (href === "/" ? pathname === "/" : pathname?.startsWith(href));
@@ -32,8 +34,8 @@ export default function Header() {
               <CalendarDays className="h-5 w-5" />
             </div>
             <div className="">
-              <p className="text-sm font-semibold tracking-wide text-neutral-900 dark:text-neutral-100">Eventify</p>
-              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">Plan. Host. Manage.</p>
+              <p className="text-sm font-semibold tracking-wide text-neutral-200 dark:text-neutral-100">Eventify</p>
+              <p className="text-[11px] text-neutral-400 dark:text-neutral-400">Plan. Host. Manage.</p>
             </div>
           </Link>
 

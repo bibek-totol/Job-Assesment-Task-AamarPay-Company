@@ -217,7 +217,7 @@ export default function CreateEventPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setOpenDialog(false)}>
-              Stay Here
+             <span className="text-black">Stay Here</span> 
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleContinue}>
               Go to My Events
