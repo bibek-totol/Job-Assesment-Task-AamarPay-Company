@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, MapPin, Tag, FileText, Type } from "lucide-react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,13 +14,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
+import { useApp } from "../context/AppContext";
+import Swal from "sweetalert2";
 
 export default function CreateEventPage() {
   const router = useRouter();
+  const { user } = useApp();
 
   const [form, setForm] = useState({
-    id:"",
+    id: "",
     title: "",
     description: "",
     date: "",
@@ -28,7 +31,7 @@ export default function CreateEventPage() {
   });
 
   const [errors, setErrors] = useState({});
-  const [openDialog, setOpenDialog] = useState(false); 
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +49,7 @@ export default function CreateEventPage() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
@@ -54,25 +57,53 @@ export default function CreateEventPage() {
       return;
     }
 
-    // Save event to localStorage
-    const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    localStorage.setItem("events", JSON.stringify([...existingEvents, form]));
-
-    const response = fetch("/api/events", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    if (!user) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "You must be logged in to create an event.",
+      });
+      return;
+    }
 
   
-    setOpenDialog(true);
+    const eventWithUser = {
+      ...form,
+      createdBy: {
+        userId: user._id || null,
+        name: user.name,
+        email: user.email,
+      },
+    };
+
+    // Save event to localStorage (optional)
+    const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
+    localStorage.setItem("events", JSON.stringify([...existingEvents, eventWithUser]));
+
+    // Save event to MongoDB
+    const response = await fetch("/api/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(eventWithUser),
+    });
+
+    if (response.ok) {
+      setForm({
+        id: "",
+        title: "",
+        description: "",
+        date: "",
+        location: "",
+        category: "",
+      });
+      setErrors({});
+      setOpenDialog(true);
+    }
   };
 
   const handleContinue = () => {
     setOpenDialog(false);
-    router.push("/"); // redirect after confirmation
+    router.push("/my-events"); // redirect to My Events page
   };
 
   return (
@@ -83,9 +114,8 @@ export default function CreateEventPage() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-
-
-        <div>
+          {/* ID */}
+          <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
               <Type className="h-4 w-4 mr-2" /> ID
             </label>
@@ -97,9 +127,7 @@ export default function CreateEventPage() {
               className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="Enter event ID"
             />
-            {errors.title && (
-              <p className="text-red-500 text-xs mt-1">{errors.id}</p>
-            )}
+            {errors.id && <p className="text-red-500 text-xs mt-1">{errors.id}</p>}
           </div>
 
           {/* Title */}
@@ -115,9 +143,7 @@ export default function CreateEventPage() {
               className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="Enter event title"
             />
-            {errors.title && (
-              <p className="text-red-500 text-xs mt-1">{errors.title}</p>
-            )}
+            {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
           </div>
 
           {/* Description */}
@@ -133,9 +159,7 @@ export default function CreateEventPage() {
               rows={3}
               placeholder="Enter event description"
             />
-            {errors.description && (
-              <p className="text-red-500 text-xs mt-1">{errors.description}</p>
-            )}
+            {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
           </div>
 
           {/* Date */}
@@ -150,9 +174,7 @@ export default function CreateEventPage() {
               onChange={handleChange}
               className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            {errors.date && (
-              <p className="text-red-500 text-xs mt-1">{errors.date}</p>
-            )}
+            {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date}</p>}
           </div>
 
           {/* Location */}
@@ -168,9 +190,7 @@ export default function CreateEventPage() {
               className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="Enter event location"
             />
-            {errors.location && (
-              <p className="text-red-500 text-xs mt-1">{errors.location}</p>
-            )}
+            {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
           </div>
 
           {/* Category */}
@@ -191,12 +211,9 @@ export default function CreateEventPage() {
               <option value="Webinar">Webinar</option>
               <option value="Hackathon">Hackathon</option>
             </select>
-            {errors.category && (
-              <p className="text-red-500 text-xs mt-1">{errors.category}</p>
-            )}
+            {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category}</p>}
           </div>
 
-  
           <button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition"
@@ -206,9 +223,9 @@ export default function CreateEventPage() {
         </form>
       </div>
 
-
+      {/* Confirmation Dialog */}
       <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className={"bg-neutral-800 text-white"}>
           <AlertDialogHeader>
             <AlertDialogTitle>Event Created Successfully 🎉</AlertDialogTitle>
             <AlertDialogDescription>
@@ -217,7 +234,7 @@ export default function CreateEventPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setOpenDialog(false)}>
-             <span className="text-black">Stay Here</span> 
+              <span className="text-black">Stay Here</span>
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleContinue}>
               Go to My Events

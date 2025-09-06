@@ -12,7 +12,10 @@ export function AppProvider({ children }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // ✅ Check localStorage on page load
+
+  
+
+ 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -20,7 +23,7 @@ export function AppProvider({ children }) {
     }
   }, []);
 
-  // ✅ Register function with SweetAlert
+ 
   const registerUser = async (e, form) => {
     e.preventDefault();
     setLoading(true);
@@ -34,8 +37,9 @@ export function AppProvider({ children }) {
       if (res.ok) {
         setUser(data.user || null);
         localStorage.setItem("user", JSON.stringify(data.user));
-        Swal.fire("Success", data.message || "Registration successful!", "success");
         router.push("/");
+        Swal.fire("Success", data.message || "Registration successful!", "success");
+      
       } else {
         Swal.fire("Error", data.error || "Registration failed!", "error");
       }
@@ -44,6 +48,7 @@ export function AppProvider({ children }) {
       Swal.fire("Error", "Something went wrong!", "error");
     } finally {
       setLoading(false);
+      setMessage("");
     }
   };
 
@@ -61,8 +66,9 @@ export function AppProvider({ children }) {
       if (res.ok) {
         setUser(data.user || null);
         localStorage.setItem("user", JSON.stringify(data.user));
-        Swal.fire("Welcome Back", "Login successful!", "success");
         router.push("/");
+        Swal.fire("Welcome Back", "Login successful!", "success");
+     
       } else {
         Swal.fire("Error", data.error || "Login failed!", "error");
       }
@@ -71,6 +77,7 @@ export function AppProvider({ children }) {
       Swal.fire("Error", "Something went wrong!", "error");
     } finally {
       setLoading(false);
+      setMessage("");
     }
   };
 

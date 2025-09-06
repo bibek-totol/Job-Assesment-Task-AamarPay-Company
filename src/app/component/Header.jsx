@@ -51,8 +51,9 @@ export default function Header() {
             {
               user ? 
               <button
+              
     onClick={logOut}
-    className="group relative rounded-xl px-3 py-2 text-sm font-medium text-white hover:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-indigo-400/60"
+    className="group relative hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60  rounded-xl px-3 py-2 text-sm font-medium text-white hover:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-indigo-400/60"
   >
     Logout
   </button>
@@ -76,7 +77,7 @@ export default function Header() {
           
           <button
             onClick={() => setOpen((s) => !s)}
-            className="relative z-10 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200/70 bg-white/80 shadow-sm backdrop-blur-md transition hover:scale-[1.02] active:scale-95 dark:border-neutral-800 dark:bg-neutral-900 md:hidden"
+            className="relative z-10 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200/70 bg-white/10 shadow-sm backdrop-blur-md transition hover:scale-[1.02] active:scale-95 dark:border-neutral-800 dark:bg-neutral-900 md:hidden"
             aria-label="Toggle menu"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

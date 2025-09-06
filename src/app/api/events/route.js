@@ -18,7 +18,7 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    const { title, description, date, location, category } = await req.json();
+    const { title, description, date, location, category,createdBy } = await req.json();
 
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
@@ -29,6 +29,7 @@ export async function POST(req) {
       date,
       location,
       category,
+      createdBy
     });
 
     return Response.json(result, { status: 201 });
