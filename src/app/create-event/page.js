@@ -19,6 +19,7 @@ export default function CreateEventPage() {
   const router = useRouter();
 
   const [form, setForm] = useState({
+    id:"",
     title: "",
     description: "",
     date: "",
@@ -36,6 +37,7 @@ export default function CreateEventPage() {
 
   const validate = () => {
     let newErrors = {};
+    if (!form.id) newErrors.id = "ID is required";
     if (!form.title) newErrors.title = "Title is required";
     if (!form.description) newErrors.description = "Description is required";
     if (!form.date) newErrors.date = "Date is required";
@@ -56,6 +58,14 @@ export default function CreateEventPage() {
     const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
     localStorage.setItem("events", JSON.stringify([...existingEvents, form]));
 
+    const response = fetch("/api/events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+
   
     setOpenDialog(true);
   };
@@ -73,6 +83,25 @@ export default function CreateEventPage() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+
+
+        <div>
+            <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
+              <Type className="h-4 w-4 mr-2" /> ID
+            </label>
+            <input
+              type="text"
+              name="id"
+              value={form.id}
+              onChange={handleChange}
+              className="w-full rounded-lg bg-neutral-800 text-white p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Enter event ID"
+            />
+            {errors.title && (
+              <p className="text-red-500 text-xs mt-1">{errors.id}</p>
+            )}
+          </div>
+
           {/* Title */}
           <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
@@ -167,7 +196,7 @@ export default function CreateEventPage() {
             )}
           </div>
 
-          {/* Submit Button */}
+  
           <button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition"
@@ -177,7 +206,7 @@ export default function CreateEventPage() {
         </form>
       </div>
 
-      {/* ✅ AlertDialog after submission */}
+
       <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>

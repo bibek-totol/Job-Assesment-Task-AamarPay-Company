@@ -33,7 +33,7 @@ export default function EventBanner({ events }) {
   return (
     <>
       <aside className="md:col-span-1 space-y-6 mt-10">
-        {/* 🔎 Search Bar */}
+  
         <div className="mt-4">
           <input
             type="text"
@@ -44,7 +44,7 @@ export default function EventBanner({ events }) {
           />
         </div>
 
-        {/* Category Filters */}
+      
         <FilterSection title="Categories">
           {categories.map((cat) => (
             <label
@@ -63,7 +63,7 @@ export default function EventBanner({ events }) {
         </FilterSection>
       </aside>
 
-      {/* Event Cards */}
+
       <main className="mt-28 md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredEvents.map((event, idx) => (
           <motion.div

@@ -8,7 +8,7 @@ export default async function Home() {
       <div className="mx-auto max-w-[1280px]  grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Events Grid */}
 
-        <EventBanner events={events.events} />
+        <EventBanner events={events} />
       </div>
     </div>
   );

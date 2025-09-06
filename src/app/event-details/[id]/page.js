@@ -6,7 +6,7 @@ import { getData } from "../../apiData/data";
 
 export default async function EventDetailsPage({ params }) {
   const events = await getData();
-  const oneevent = events.events.find((e) => e.id === params.id);
+  const oneevent = events.find((e) => e.id === params.id);
 
   if (!oneevent) {
     return (
@@ -26,8 +26,24 @@ export default async function EventDetailsPage({ params }) {
       <div className="w-full max-w-3xl bg-neutral-900 rounded-2xl shadow-xl p-8">
   
         <h1 className="text-3xl font-bold text-white mb-6 text-center">
-          {oneevent.title}
+         <span className="text-indigo-400">Event Details:</span> <br/> {oneevent.title}
         </h1>
+
+
+
+        <div className="space-y-6 text-neutral-300">
+          
+          <div>
+            <label className="flex items-center text-sm font-semibold text-neutral-400 mb-2">
+              <FileText className="h-5 w-5 mr-2 text-indigo-400" />
+              Event ID
+            </label>
+            <p className="bg-neutral-800 p-4 rounded-lg text-sm leading-relaxed text-neutral-200">
+              {oneevent.id}
+            </p>
+          </div>
+          </div>
+
 
         
         <div className="space-y-6 text-neutral-300">
