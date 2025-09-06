@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";  // ✅ Import SweetAlert2
+import Swal from "sweetalert2";  
 
 const AppContext = createContext();
 
@@ -52,7 +52,7 @@ export function AppProvider({ children }) {
     }
   };
 
-  // ✅ Login function with SweetAlert
+  
   const loginUser = async (e, form) => {
     e.preventDefault();
     setLoading(true);
@@ -81,7 +81,7 @@ export function AppProvider({ children }) {
     }
   };
 
-  // ✅ Logout with SweetAlert confirmation
+  
   const logOut = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -223,7 +223,7 @@ const handleEdit = async (event,setEvents) => {
         },
       });
   
-      if (!formValues) return; // user cancelled
+      if (!formValues) return; 
   
       const response = await fetch("/api/events", {
         method: "PUT",
