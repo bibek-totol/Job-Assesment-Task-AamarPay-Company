@@ -76,11 +76,11 @@ export default function CreateEventPage() {
       },
     };
 
-    // Save event to localStorage (optional)
+    
     const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
     localStorage.setItem("events", JSON.stringify([...existingEvents, eventWithUser]));
 
-    // Save event to MongoDB
+    
     const response = await fetch("/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -103,7 +103,7 @@ export default function CreateEventPage() {
 
   const handleContinue = () => {
     setOpenDialog(false);
-    router.push("/my-events"); // redirect to My Events page
+    router.push("/my-events"); 
   };
 
   return (
@@ -114,7 +114,7 @@ export default function CreateEventPage() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* ID */}
+          
           <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
               <Type className="h-4 w-4 mr-2" /> ID
@@ -130,7 +130,7 @@ export default function CreateEventPage() {
             {errors.id && <p className="text-red-500 text-xs mt-1">{errors.id}</p>}
           </div>
 
-          {/* Title */}
+    
           <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
               <Type className="h-4 w-4 mr-2" /> Title
@@ -146,7 +146,7 @@ export default function CreateEventPage() {
             {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
           </div>
 
-          {/* Description */}
+      
           <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
               <FileText className="h-4 w-4 mr-2" /> Description
@@ -162,7 +162,7 @@ export default function CreateEventPage() {
             {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
           </div>
 
-          {/* Date */}
+  
           <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
               <Calendar className="h-4 w-4 mr-2 " /> Date
@@ -177,7 +177,7 @@ export default function CreateEventPage() {
             {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date}</p>}
           </div>
 
-          {/* Location */}
+        
           <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
               <MapPin className="h-4 w-4 mr-2" /> Location
@@ -193,7 +193,7 @@ export default function CreateEventPage() {
             {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
           </div>
 
-          {/* Category */}
+      
           <div>
             <label className="flex items-center text-sm font-medium text-neutral-300 mb-2">
               <Tag className="h-4 w-4 mr-2" /> Category
@@ -223,7 +223,7 @@ export default function CreateEventPage() {
         </form>
       </div>
 
-      {/* Confirmation Dialog */}
+      
       <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
         <AlertDialogContent className={"bg-neutral-800 text-white"}>
           <AlertDialogHeader>

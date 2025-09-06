@@ -100,9 +100,171 @@ export function AppProvider({ children }) {
     });
   };
 
+
+
+
+  const handleDelete = async (eventId, setEvents) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#ef4444",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Yes, delete it!",
+      });
+  
+      if (!result.isConfirmed) return;
+  
+      const response = await fetch("/api/events", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: eventId }),
+      });
+  
+      if (response.ok) {
+        setEvents((prev) => prev.filter((event) => event._id !== eventId));
+  
+        await Swal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "Your event has been deleted.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      } else {
+        await Swal.fire({
+          icon: "error",
+          title: "Failed!",
+          text: "Something went wrong while deleting.",
+        });
+      }
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "An error occurred while deleting the event.",
+      });
+    }
+  };
+  
+
+
+const formatDateTimeLocal = (isoString) => {
+    const date = new Date(isoString);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const min = String(date.getMinutes()).padStart(2, "0");
+    const ss = String(date.getSeconds()).padStart(2, "0");
+    const ms = String(date.getMilliseconds()).padStart(3, "0");
+  
+    return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}.${ms}`;
+  };
+  
+const handleEdit = async (event,setEvents) => {
+    try {
+      const { value: formValues } = await Swal.fire({
+        title: "Edit Event",
+        html: `
+          <input id="swal-title" class="swal2-input custom-input" placeholder="Title" value="${event.title}" />
+          <textarea id="swal-description" class="swal2-textarea custom-input" placeholder="Description">${event.description}</textarea>
+          <input 
+          id="swal-date" 
+          type="datetime-local" 
+          class="swal2-input custom-input" 
+          value="${formatDateTimeLocal(event.date)}" 
+        />
+        
+
+          <input id="swal-location" class="swal2-input custom-input" placeholder="Location" value="${event.location}" />
+          <input id="swal-category" class="swal2-input custom-input" placeholder="Category" value="${event.category}" />
+          <style>
+            .custom-input {
+              width: 100% !important;        /* full width */
+              padding: 12px;                 /* bigger padding */
+              border: 1px solid #4f46e5;     /* border color */
+              border-radius: 8px;            /* rounded corners */
+              background-color: #1f2937;     /* dark background */
+              color: #f9fafb;                /* text color */
+              font-size: 14px;               /* text size */
+              margin-left: 0;  
+              margin-right: 0;         
+            }
+            .swal2-popup {
+              background-color: black !important; /* dialog background */
+              color: #f9fafb !important;           /* dialog text color */
+              rounded: 16px !important;
+              
+            }
+            .swal2-confirm {
+              background-color: #4f46e5 !important; /* confirm button */
+              color: #fff !important;
+            }
+            .swal2-cancel {
+              background-color: #6b7280 !important; /* cancel button */
+              color: #fff !important;
+            }
+          </style>
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        preConfirm: () => {
+          return {
+            title: document.getElementById("swal-title").value,
+            description: document.getElementById("swal-description").value,
+            date: document.getElementById("swal-date").value,
+            location: document.getElementById("swal-location").value,
+            category: document.getElementById("swal-category").value,
+          };
+        },
+      });
+  
+      if (!formValues) return; // user cancelled
+  
+      const response = await fetch("/api/events", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: event._id, ...formValues }),
+      });
+  
+      if (response.ok) {
+        setEvents((prev) =>
+        prev.map((e) => (e._id === event._id ? { ...e, ...formValues } : e))
+      );
+        await Swal.fire({
+          icon: "success",
+          title: "Updated!",
+          text: "Your event has been updated successfully.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+       
+      } else {
+        await Swal.fire({
+          icon: "error",
+          title: "Failed!",
+          text: "Something went wrong while updating.",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      await Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "An error occurred while updating the event.",
+      });
+    }
+  };
+  
+
   return (
     <AppContext.Provider
-      value={{ loading, user, message, registerUser, loginUser, logOut }}
+      value={{ loading, user, message, registerUser, loginUser, logOut,
+        handleEdit,handleDelete }}
     >
       {children}
     </AppContext.Provider>

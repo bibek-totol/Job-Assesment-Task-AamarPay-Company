@@ -51,7 +51,7 @@ export async function PUT(req) {
     const db = client.db(process.env.MONGODB_DB);
 
     const result = await db.collection("events").updateOne(
-      { id },
+      { _id: new ObjectId(id) },
       { $set: { title, description, date, location, category } }
     );
 
@@ -62,6 +62,8 @@ export async function PUT(req) {
 }
 
 
+
+
 export async function DELETE(req) {
   try {
     const { id } = await req.json();
@@ -70,15 +72,22 @@ export async function DELETE(req) {
       return Response.json({ error: "Event ID is required" }, { status: 400 });
     }
 
+    console.log(id);
+
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
 
     const result = await db.collection("events").deleteOne({
-      id
+      _id: new ObjectId(id),
     });
 
-    return Response.json(result, { status: 200 });
+    if (result.deletedCount === 0) {
+      return Response.json({ error: "Event not found" }, { status: 404 });
+    }
+
+    return Response.json({ success: true }, { status: 200 });
   } catch (error) {
+    console.error("Delete failed:", error);
     return Response.json({ error: "Delete failed" }, { status: 500 });
   }
 }

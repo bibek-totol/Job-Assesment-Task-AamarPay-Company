@@ -9,8 +9,6 @@ export default function Register() {
   const {registerUser,message,loading} = useApp();
 
 
-  
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-gray-900 via-gray-800 to-black">
       <motion.div
