@@ -4,17 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, CalendarDays } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useApp } from "../context/AppContext";
 
 export default function Header() {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
+  const {user,logOut} = useApp();
 
   const nav = [
     { name: "Home", href: "/" },
     { name: "Create Event", href: "/create-event" },
     { name: "My Events", href: "/my-events" },
-    { name: "Login", href: "/login" },
-    { name: "Register", href: "/register" },
+   
   ];
 
   const isActive = (href) => (href === "/" ? pathname === "/" : pathname?.startsWith(href));
@@ -46,6 +47,30 @@ export default function Header() {
                 <span className="text-white">{item.name}</span>
               </NavItem>
             ))}
+
+            {
+              user ? 
+              <button
+    onClick={logOut}
+    className="group relative rounded-xl px-3 py-2 text-sm font-medium text-white hover:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-indigo-400/60"
+  >
+    Logout
+  </button>
+              :
+              (
+                <>
+                <NavItem  href="/login" active={isActive("/login")}>
+                <span className="text-white">Login</span>
+              </NavItem>
+              <NavItem  href="/register" active={isActive("/register")}>
+                <span className="text-white">Register</span>
+              </NavItem>
+                </>
+              
+              )
+            }
+
+
           </nav>
 
           
