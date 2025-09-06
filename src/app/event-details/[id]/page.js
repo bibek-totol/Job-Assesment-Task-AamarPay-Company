@@ -1,22 +1,28 @@
 import { Calendar, MapPin, Tag, FileText } from "lucide-react";
 import Link from "next/link";
 import { getData } from "../../apiData/data";
+import RSVPEvent from "@/app/component/RSVPEvent";
 
 
 
 export default async function EventDetailsPage({ params }) {
   const events = await getData();
+
   const oneevent = events.find((e) => e.id === params.id);
 
   if (!oneevent) {
     return (
       <div className="text-center text-white py-20">
         <h2 className="text-2xl">Event Not Found</h2>
-        <Link href="/events">
+        <Link href="/">
           <button className="mt-6 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">
-            Back to Events
+            Back to Home
           </button>
         </Link>
+
+        
+         
+        
       </div>
     );
   }
@@ -93,12 +99,14 @@ export default async function EventDetailsPage({ params }) {
         </div>
 
       
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex flex-row justify-center gap-4 ">
           <Link href="/">
             <button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">
               Back to Events
             </button>
           </Link>
+
+         <RSVPEvent eventid={oneevent._id}/>
         </div>
       </div>
     </div>

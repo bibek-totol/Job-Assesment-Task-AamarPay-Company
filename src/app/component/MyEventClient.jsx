@@ -28,6 +28,20 @@ const myfilteredevents = events.filter(
   (event) => user && user._id === event.createdBy.userId
 );
 
+
+if (!myfilteredevents) {
+    return (
+      <div className="text-center text-white py-20">
+        <h2 className="text-2xl">Event Not Found</h2>
+        <Link href="/">
+          <button className="mt-6 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">
+            Back to Home
+          </button>
+        </Link>
+      </div>
+    );
+  }
+
   
 
   return (

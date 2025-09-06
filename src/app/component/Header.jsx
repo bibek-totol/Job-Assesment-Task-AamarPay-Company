@@ -95,7 +95,7 @@ export default function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
-              className="mt-2 overflow-hidden rounded-2xl border border-white/20 bg-white/80 shadow-lg backdrop-blur-xl dark:border-neutral-800/60 dark:bg-neutral-900/70 md:hidden"
+              className="mt-2overflow-hidden rounded-2xl border border-white/20 bg-neutral-900/60 shadow-lg backdrop-blur-xl dark:border-neutral-800/60 dark:bg-neutral-900/70 md:hidden"
             >
               <div className="p-2">
                 {nav.map((item) => (
@@ -109,7 +109,7 @@ export default function Header() {
                         : "hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60"
                     } group relative mb-1 flex items-center justify-between rounded-xl px-3 py-3 transition `}
                   >
-                    <span className="text-sm font-medium text-neutral-800 transition group-hover:translate-x-0.5 dark:text-neutral-100">
+                    <span className="text-sm font-medium  text-white  transition group-hover:translate-x-0.5 dark:text-neutral-100">
                       {item.name}
                     </span>
                     {isActive(item.href) && (
@@ -119,7 +119,36 @@ export default function Header() {
                       />
                     )}
                   </Link>
+
+
                 ))}
+
+                {
+                  user ? 
+                  <button
+                  onClick={logOut}
+                  className="group relative flex items-center justify-between rounded-xl px-3 py-3 transition hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60"
+                >
+                  <span className="text-sm font-medium  text-white  transition group-hover:translate-x-0.5 dark:text-neutral-100">
+                    Logout
+                  </span>
+                </button>
+                :
+                (
+                  <>
+                  <button className="group relative flex items-center justify-between rounded-xl px-3 py-3 transition hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60">
+                  <span className="text-sm font-medium  text-white  transition group-hover:translate-x-0.5 dark:text-neutral-100">
+                    Login
+                  </span>
+                </button>
+                <button className="group relative flex items-center justify-between rounded-xl px-3 py-3 transition hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60">
+                  <span className="text-sm font-medium  text-white  transition group-hover:translate-x-0.5 dark:text-neutral-100">
+                    Register
+                  </span>
+                </button>
+                  </>
+                )
+                }
               </div>
             </motion.div>
           )}
